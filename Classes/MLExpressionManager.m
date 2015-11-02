@@ -154,9 +154,16 @@
     });
 }
 
-+ (NSAttributedString*)expressionAttributedStringWithString:(id)string expression:(MLExpression*)expression {
++ (NSAttributedString*)expressionAttributedStringWithString:(id)string expression:(MLExpression*)expression{
+    return [self expressionAttributedStringWithString:string expression:expression withLineLineHeightMultiple:kExpressionLineHeightMultiple];
+}
+
++ (NSAttributedString*)expressionAttributedStringWithString:(id)string expression:(MLExpression*)expression withLineLineHeightMultiple:(CGFloat)lineMultiple {
     NSAssert(expression&&[expression isValid], @"expression invalid");
     NSAssert([string isKindOfClass:[NSString class]]||[string isKindOfClass:[NSAttributedString class]], @"string非字符串. %@",string);
+    if (lineMultiple <= 1) {
+        lineMultiple = kExpressionLineHeightMultiple;
+    }
     
     NSAttributedString *attributedString = nil;
     if ([string isKindOfClass:[NSString class]]) {
@@ -173,8 +180,8 @@
     
     //处理表情
     NSArray *results = [expression.expressionRegularExpression matchesInString:attributedString.string
-                                                            options:NSMatchingWithTransparentBounds
-                                                              range:NSMakeRange(0, [attributedString length])];
+                                                                       options:NSMatchingWithTransparentBounds
+                                                                         range:NSMakeRange(0, [attributedString length])];
     //遍历表情，然后找到对应图像名称，并且处理
     NSUInteger location = 0;
     for (NSTextCheckingResult *result in results) {
@@ -193,7 +200,7 @@
             NSString *imagePath = [expression.bundleName stringByAppendingPathComponent:imageName];
             UIImage *image = [UIImage imageNamed:imagePath];
             
-            MLTextAttachment *textAttachment = [MLTextAttachment textAttachmentWithLineHeightMultiple:kExpressionLineHeightMultiple imageBlock:^UIImage *(CGRect imageBounds, NSTextContainer *textContainer, NSUInteger charIndex, MLTextAttachment *textAttachment) {
+            MLTextAttachment *textAttachment = [MLTextAttachment textAttachmentWithLineHeightMultiple:lineMultiple imageBlock:^UIImage *(CGRect imageBounds, NSTextContainer *textContainer, NSUInteger charIndex, MLTextAttachment *textAttachment) {
                 return image;
             } imageAspectRatio:image.size.width/image.size.height];
             [resultAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
