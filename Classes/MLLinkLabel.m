@@ -83,7 +83,7 @@ REGULAREXPRESSION(HashtagRegularExpression, @"#([\\u4e00-\\u9fa5\\w\\-]+)")
 - (UILongPressGestureRecognizer *)longPressGestureRecognizer
 {
     if (!_longPressGestureRecognizer) {
-        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressGestureDidFire:)];
+        _longPressGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(longPressGestureDidFire:)];
         _longPressGestureRecognizer.delegate = self;
     }
     return _longPressGestureRecognizer;
@@ -440,7 +440,7 @@ static NSArray * kAllRegexps() {
 }
 
 - (void)longPressGestureDidFire:(UILongPressGestureRecognizer *)sender {
-    if (sender.state==UIGestureRecognizerStateBegan) {
+    if (sender.state==UIGestureRecognizerStateEnded) {
         MLLink *link = [self linkAtPoint:[sender locationInView:self]];
         if (link) {
             NSString *linkText = [self.textStorage.string substringWithRange:link.linkRange];
