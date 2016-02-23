@@ -8,7 +8,7 @@ s.license      = { :type => 'MIT'}
 s.author       = { "molon" => "dudl@qq.com" }
 
 s.source       = {
-:git => "https://github.com/molon/MLLabel.git",
+:git => "https://github.com/upworldcjw/MLLabel",
 :tag => "#{s.version}"
 }
 
